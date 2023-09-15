@@ -16,6 +16,10 @@ on:
     schedule:
       - cron: 1 1 1 1 1
 
+env:
+  run-tests: true
+  build_type: release
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -37,10 +41,12 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-          exit 1
+          echo "${{ env.build_type }}"
 
   dev:
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' # don't deploy here if pr build
+    
     needs: [build]
     steps:
       - uses: actions/checkout@v3
